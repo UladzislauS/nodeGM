@@ -1,0 +1,26 @@
+{
+  "name": "node-gm",
+  "version": "1.0.0",
+  "description": "Traning tasks",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UladzislauS/nodeGM.git"
+  },
+  "author": "Uladzislau_Sipaila <UladzislauS@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UladzislauS/nodeGM/issues"
+  },
+  "homepage": "https://github.com/UladzislauS/nodeGM#readme",
+  "dependencies": {
+    "babel": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0"
+  }
+}
