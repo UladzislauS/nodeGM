@@ -1,9 +1,5 @@
-import config from '../config/config.json';
-import {
-    Product,
-    User
-} from './models';
+import { on } from 'events';
+import {Importer} from './models/importer';
 
-console.log(config.name);
-new Product();
-new User();
+const importer = new Importer(`${__dirname}/data`);
+
