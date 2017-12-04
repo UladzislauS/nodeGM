@@ -1,4 +1,3 @@
-import { Importer } from './models/importer';
+import streams from './utils/streams';
 
-const importer = new Importer(`${__dirname}/data`);
-
+streams.init();
