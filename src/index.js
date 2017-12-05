@@ -1,4 +1,4 @@
-import { Importer } from './models/importer';
+import app from './app';
 
-const importer = new Importer(`${__dirname}/data`);
-
+const port = process.env.PORT || 8080;
+app.listen(port, () => console.log(`App listening on port ${port}!`));
