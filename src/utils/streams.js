@@ -1,12 +1,13 @@
-import path from 'path';
-import fs from 'fs';
-import async from 'async';
-import through2 from 'through2';
-import request from 'request';
-import csvParse from 'csv-parse';
-import yargs from 'yargs';
+const path = require('path');
+const fs = require('fs');
+const through2 = require('through2');
+const request = require('request');
+const csvParse = require('csv-parse');
+const yargs = require('yargs');
 
-export default {
+init();
+
+module.exports = {
     init
 };
 
