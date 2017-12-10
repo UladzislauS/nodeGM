@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cookieMiddleware from './middlewares/cookieMiddleware';
+import { User, Product } from './models';
 import queryMiddleware from './middlewares/queryMiddleware';
 import mockProducts from './mockProducts';
 import mockUsers from './mockUsers';
@@ -12,39 +13,53 @@ app.use(cookieMiddleware);
 app.use(queryMiddleware);
 
 app.get('/api/users', function (req, res) {
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify(mockUsers, null, 4));
+    User.all()
+        .then((users) => res.status(200).send(users))
+        .catch((error) => res.status(400).send(error));
 });
 
 app.get('/api/products', function (req, res) {
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify(mockProducts, null, 4));
-});
+    Product
+        .all()
+        .then((products) => res.status(200).send(products))
+        .catch((error) => res.status(400).send(error));
+    }
+);
 
 app.get('/api/products/:id', function (req, res) {
-    const product = mockProducts.find((prod) => {
-        return prod.id === +req.params.id;
-    });
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify(product, null, 4));
+    Product
+        .findById(req.params.id)
+        .then((product) => {
+            if (!product) {
+                res.status(404).send({message: 'Product not found'});
+            }
+            res.status(200).send(product);
+        })
+        .catch((error) => res.status(400).send(error));
 });
 
 app.get('/api/products/:id/reviews', function (req, res) {
-    const product = mockProducts.find((prod) => {
-        return prod.id === +req.params.id;
-    });
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end(product.reviews.toString());
+    Product
+        .findById(req.params.id)
+        .then((product) => {
+            if (!product) {
+                res.status(404).send({message: 'Product not found'});
+            }
+            res.status(200).send(product.reviews);
+        })
+        .catch((error) => res.status(400).send(error));
 });
 
 app.post('/api/products', function (req, res) {
     const product = {
         id: req.body.id,
+        productId: req.body.id,
         reviews: req.body.reviews
     };
-    mockProducts.push(product);
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end(JSON.stringify(product, null, 4));
+    Product
+        .create(product)
+        .then((product) => res.status(200).send(product))
+        .catch((error) => res.status(400).send(error));
 });
 
 export default app;
