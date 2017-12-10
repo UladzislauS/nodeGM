@@ -1,50 +1,33 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import passport from 'passport';
+import flash from 'connect-flash';
+import session from 'express-session';
+import morgan from 'morgan';
+import initPassport from './config/passport';
+import appRouter from './routers/app';
+import authRouter from './routers/auth';
+import productsRouter from './routers/products';
+import tokenMiddleware from './middlewares/tokenMiddleware';
 import cookieMiddleware from './middlewares/cookieMiddleware';
 import queryMiddleware from './middlewares/queryMiddleware';
-import mockProducts from './mockProducts';
-import mockUsers from './mockUsers';
 
 const app = express();
 
+app.use(morgan('dev'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+app.use(tokenMiddleware);
 app.use(cookieMiddleware);
 app.use(queryMiddleware);
+app.use(session({ secret: 'tssssssssssssssssssss' }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
-app.get('/api/users', function (req, res) {
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify(mockUsers, null, 4));
-});
-
-app.get('/api/products', function (req, res) {
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify(mockProducts, null, 4));
-});
-
-app.get('/api/products/:id', function (req, res) {
-    const product = mockProducts.find((prod) => {
-        return prod.id === +req.params.id;
-    });
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify(product, null, 4));
-});
-
-app.get('/api/products/:id/reviews', function (req, res) {
-    const product = mockProducts.find((prod) => {
-        return prod.id === +req.params.id;
-    });
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end(product.reviews.toString());
-});
-
-app.post('/api/products', function (req, res) {
-    const product = {
-        id: req.body.id,
-        reviews: req.body.reviews
-    };
-    mockProducts.push(product);
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end(JSON.stringify(product, null, 4));
-});
+initPassport();
+app.use('/app', appRouter);
+app.use('/api/products', productsRouter);
+app.use('/api/auth', authRouter);
 
 export default app;
