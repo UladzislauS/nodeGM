@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken';
 
 export default function tokenMiddleware(req, res, next) {
-    if (req.url === '/api/auth') {
+    if (req.url.indexOf('/api/') === -1
+        || req.url === '/api/auth'
+        || req.url === '/api/auth/passport') {
         next();
         return;
     }
